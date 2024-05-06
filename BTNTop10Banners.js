@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         BTN Top 10 Banners
-// @version      1.0
+// @version      1.0.1
 // @grant        GM_xmlhttpRequest
 // @grant        GM.notification
 // @match        https://broadcasthe.net/top10.php
@@ -8,8 +8,6 @@
 // @icon         https://broadcasthe.net/favicon.ico
 // @author       gunnerkid
 // ==/UserScript==
-
-var isPanelVisible = false;
 
 (function() {
     'use strict';
