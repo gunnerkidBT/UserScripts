@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         BTN Top 10 Banners
-// @version      1.2
+// @version      1.3
 // @grant        GM_xmlhttpRequest
 // @grant        GM.notification
-// @match        https://broadcasthe.net/top10.php
+// @match        https://broadcasthe.net/top10.php*
 // @description  Display Banners on Top 10 page
 // @icon         https://broadcasthe.net/favicon.ico
 // @author       gunnerkid
@@ -12,17 +12,20 @@
 (function() {
     'use strict';
 
+    function getRowCount() {
+        return document.querySelectorAll('#content tbody tr.group_torrent').length;
+    }
+
     // Function to add banners to all torrent columns
     function addAllBanners() {
         const torrentColumns = document.querySelectorAll('#content tbody tr.colhead');
-
         torrentColumns.forEach((column) => {
             const bannerTd = document.createElement('td');
             bannerTd.classList.add('banner');
             column.insertBefore(bannerTd, column.children[2]);
         });
-
-        for (let i = 0; i <= 59; i++) {
+        const rowCount = getRowCount();
+        for (let i = 0; i < rowCount; i++) {
             getUrlForBanner(i);
         }
     }
@@ -48,6 +51,9 @@
                         const bannerUrl = spanElement.src;
                         addBannerToTable(bannerUrl, rowCount);
                     }
+                },
+                onerror: function(error) {
+                    console.error('Error fetching banner URL:', error);
                 }
             });
         }
@@ -74,5 +80,4 @@
 
     // Call the initialization function
     init();
-
 })();
