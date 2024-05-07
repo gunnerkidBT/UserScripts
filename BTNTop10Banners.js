@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         BTN Top 10 Banners
-// @version      1.3
+// @version      1.3.1
 // @grant        GM_xmlhttpRequest
 // @grant        GM.notification
 // @match        https://broadcasthe.net/top10.php*
@@ -68,7 +68,7 @@
     // Function to add banner to the table
     function addBannerToTable(bannerUrl, torrentRow) {
         const bannerTd = document.createElement('td');
-        bannerTd.classList.add('banner1');
+        bannerTd.classList.add('banner');
         const bannerImg = new Image();
         bannerImg.style.width = '100%';
         bannerImg.src = bannerUrl;
