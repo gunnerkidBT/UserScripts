@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         BTN Top 10 Banners
-// @version      1.3.2
+// @version      1.3.3
 // @grant        GM_xmlhttpRequest
 // @grant        GM.notification
 // @match        https://broadcasthe.net/top10.php*
@@ -13,6 +13,9 @@
 
 (function() {
     'use strict';
+
+    // Map to store TV show URLs
+    const tvShowUrls = new Map();
 
     function getRowCount() {
         return document.querySelectorAll('#content tbody tr.group_torrent').length;
@@ -49,22 +52,29 @@
             return;
         }
 
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: tvTitleUrl,
-            onload: function(response) {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(response.responseText, "text/html");
-                const spanElement = doc.querySelector("#banner");
-                if (spanElement) {
-                    const bannerUrl = spanElement.src;
-                    addBannerToTable(bannerUrl, torrentRow);
+        // Check if the URL is already stored in the Map
+        if (tvShowUrls.has(tvTitleUrl)) {
+            addBannerToTable(tvShowUrls.get(tvTitleUrl), torrentRow);
+        } else {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: tvTitleUrl,
+                onload: function(response) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(response.responseText, "text/html");
+                    const spanElement = doc.querySelector("#banner");
+                    if (spanElement) {
+                        const bannerUrl = spanElement.src;
+                        // Store the URL in the Map
+                        tvShowUrls.set(tvTitleUrl, bannerUrl);
+                        addBannerToTable(bannerUrl, torrentRow);
+                    }
+                },
+                onerror: function(error) {
+                    console.error('Error fetching banner URL:', error);
                 }
-            },
-            onerror: function(error) {
-                console.error('Error fetching banner URL:', error);
-            }
-        });
+            });
+        }
     }
 
     // Function to add banner to the table
