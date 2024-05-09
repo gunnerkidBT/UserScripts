@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         BTN Top 10 Banners
-// @version      1.3.1
+// @version      1.3.2
 // @grant        GM_xmlhttpRequest
 // @grant        GM.notification
 // @match        https://broadcasthe.net/top10.php*
+// @exclude      https://broadcasthe.net/top10.php?type=users
+// @exclude      https://broadcasthe.net/top10.php?type=forums
 // @description  Display Banners on Top 10 page
 // @icon         https://broadcasthe.net/favicon.ico
 // @author       gunnerkid
