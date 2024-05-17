@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         BTN Top 10 Banners
-// @version      1.3.3
+// @version      1.3.4
 // @grant        GM_xmlhttpRequest
 // @grant        GM.notification
 // @match        https://broadcasthe.net/top10.php*
@@ -17,6 +17,7 @@
     // Map to store TV show URLs
     const tvShowUrls = new Map();
 
+    // Function to get the number of torrent rows
     function getRowCount() {
         return document.querySelectorAll('#content tbody tr.group_torrent').length;
     }
@@ -31,54 +32,49 @@
         });
 
         const torrentRows = document.querySelectorAll('#content tbody tr.group_torrent');
-
-        for (let i = 0; i < getRowCount(); i++) {
-            const tvTitleUrl = searchTitleUrl(i);
+        torrentRows.forEach((row, index) => {
+            const tvTitleUrl = getTitleUrl(index);
             if (tvTitleUrl) {
-                getUrlForBanner(tvTitleUrl, torrentRows[i]);
+                fetchBannerUrl(tvTitleUrl, row);
             }
-        }
+        });
     }
 
-    // Function to search for TV title URL
-    function searchTitleUrl(rowCount) {
+    // Function to get the TV title URL for a given row index
+    function getTitleUrl(rowIndex) {
         const aElements = document.querySelectorAll('a[href*="series.php?id="]');
-        return aElements[rowCount] ? aElements[rowCount].href : null;
+        return aElements[rowIndex] ? aElements[rowIndex].href : null;
     }
 
-    // Function to get URL for banner
-    function getUrlForBanner(tvTitleUrl, torrentRow) {
-        if (!tvTitleUrl) {
-            return;
-        }
-
-        // Check if the URL is already stored in the Map
+    // Function to fetch the banner URL and add it to the row
+    function fetchBannerUrl(tvTitleUrl, torrentRow) {
         if (tvShowUrls.has(tvTitleUrl)) {
-            addBannerToTable(tvShowUrls.get(tvTitleUrl), torrentRow);
+            addBannerToRow(tvShowUrls.get(tvTitleUrl), torrentRow);
         } else {
             GM_xmlhttpRequest({
                 method: "GET",
                 url: tvTitleUrl,
-                onload: function(response) {
+                onload: (response) => {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(response.responseText, "text/html");
                     const spanElement = doc.querySelector("#banner");
                     if (spanElement) {
                         const bannerUrl = spanElement.src;
-                        // Store the URL in the Map
                         tvShowUrls.set(tvTitleUrl, bannerUrl);
-                        addBannerToTable(bannerUrl, torrentRow);
+                        addBannerToRow(bannerUrl, torrentRow);
+                    } else {
+                        console.error('Banner element not found for URL:', tvTitleUrl);
                     }
                 },
-                onerror: function(error) {
+                onerror: (error) => {
                     console.error('Error fetching banner URL:', error);
                 }
             });
         }
     }
 
-    // Function to add banner to the table
-    function addBannerToTable(bannerUrl, torrentRow) {
+    // Function to add a banner to the specified row
+    function addBannerToRow(bannerUrl, torrentRow) {
         const bannerTd = document.createElement('td');
         bannerTd.classList.add('banner');
         const bannerImg = new Image();
