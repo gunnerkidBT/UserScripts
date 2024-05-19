@@ -14,8 +14,11 @@
 (function() {
     'use strict';
 
+    const BANNER_SIZE = '37%';  // Adjust banner size
+
     // Map to store TV show URLs
     const tvShowUrls = new Map();
+
 
     // Function to get the number of torrent rows
     function getRowCount() {
