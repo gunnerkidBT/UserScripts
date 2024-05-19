@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         BTN Top 10 Banners
-// @version      1.3.4
+// @version      1.3.5
 // @grant        GM_xmlhttpRequest
 // @grant        GM.notification
 // @match        https://broadcasthe.net/top10.php*
@@ -77,6 +77,8 @@
     function addBannerToRow(bannerUrl, torrentRow) {
         const bannerTd = document.createElement('td');
         bannerTd.classList.add('banner');
+        bannerTd.style.width = '37%'; //Adjust Banner Size
+        bannerTd.style.height = '37%'; //Adjust Banner Size
         const bannerImg = new Image();
         bannerImg.style.width = '100%';
         bannerImg.src = bannerUrl;
