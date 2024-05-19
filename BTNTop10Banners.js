@@ -80,8 +80,8 @@
     function addBannerToRow(bannerUrl, torrentRow) {
         const bannerTd = document.createElement('td');
         bannerTd.classList.add('banner');
-        bannerTd.style.width = '37%'; //Adjust Banner Size
-        bannerTd.style.height = '37%'; //Adjust Banner Size
+        bannerTd.style.width = BANNER_SIZE; 
+        bannerTd.style.height = BANNER_SIZE; 
         const bannerImg = new Image();
         bannerImg.style.width = '100%';
         bannerImg.src = bannerUrl;
